@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import swal from "sweetalert";
 import Router from "../../router";
 
 const Add = () => {
@@ -34,14 +35,25 @@ const Add = () => {
     const data = await Router("POST", "items/add", body);
 
     if (data.status === 201) {
-      history.push("/");
+      swal("Success!", "New item was successfully added.", "success").then(
+        (value) => {
+          history.push("/");
+        }
+      );
     } else {
       if (data.err) {
-        data.err.errors.forEach((error) => {
-          console.log(error.message);
+        swal({
+          title: "Failed!",
+          text: "Please complete all fields",
+          icon: "error",
+          button: "Ok",
         });
       } else {
-        console.log(data.message);
+        swal({
+          title: "Something went wrong!",
+          icon: "error",
+          button: "Ok",
+        });
       }
     }
   };

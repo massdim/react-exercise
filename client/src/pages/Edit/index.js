@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
+import swal from "sweetalert";
 import Router from "../../router";
 
 const Edit = () => {
@@ -45,14 +46,28 @@ const Edit = () => {
     const data = await Router("PATCH", `items/${id}/update`, body);
 
     if (data.status === 200) {
-      history.push("/");
+      swal(
+        "Success!",
+        `Item with id ${id} was successfully updated.`,
+        "success"
+      ).then((value) => {
+        history.push("/");
+      });
     } else {
       if (data.err) {
-        data.err.errors.forEach((error) => {
-          console.log(error.message);
+        swal({
+          title: "Failed!",
+          text: "Please complete all fields",
+          icon: "error",
+          button: "Ok",
         });
       } else {
-        console.log(data.message);
+        swal({
+          title: "Failed!",
+          text: "Item id is not valid",
+          icon: "error",
+          button: "Ok",
+        });
       }
     }
   };

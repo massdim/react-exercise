@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 import Router from "../../router";
 
 const Home = () => {
@@ -10,14 +11,28 @@ const Home = () => {
     setItems(data.items);
   };
 
-  const handleDelete = async (id) => {
-    const data = await Router("DELETE", `items/${id}/delete`);
+  const handleDelete = (id) => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then(async (willDelete) => {
+      if (willDelete) {
+        const data = await Router("DELETE", `items/${id}/delete`);
 
-    if (data.status === 200) {
-      getData();
-    } else {
-      console.log(data.message);
-    }
+        if (data.status === 200) {
+          getData();
+        } else {
+          console.log(data.message);
+        }
+
+        swal("Poof! Your imaginary file has been deleted!", {
+          icon: "success",
+        });
+      }
+    });
   };
 
   useEffect(() => {

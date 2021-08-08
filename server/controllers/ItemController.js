@@ -71,11 +71,16 @@ class ItemController {
         };
       }
     } catch (err) {
-      res.json({
-        status: 500,
-        message: "Validation error!",
-        err,
-      });
+      if (err.status) {
+        res.status(err.status);
+        res.json(err);
+      } else {
+        res.json({
+          status: 500,
+          message: "Validation error!",
+          err,
+        });
+      }
     }
   }
 
